@@ -157,7 +157,7 @@ detect_gpu_freq() {
     fi
 }
 
-INSTALL_DIR="/usr/local/bin/ChromeOS_PowerControl"
+INSTALL_DIR="/usr/local/bin/PowerControl"
 echo ""
 echo "${RESET}${RED}╔${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}╗"
 echo "${RESET}${YELLOW}║                                          NOTICE:                                              ║"
@@ -167,7 +167,7 @@ echo "${RESET}${RED}║               ${RESET}${YELLOW}Must be installed in a lo
 echo "${RESET}${YELLOW}╚${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}═${RESET}${RED}═${RESET}${YELLOW}╝"
 echo "${RESET}"
 
-DEFAULT_INSTALL_DIR="/usr/local/bin/ChromeOS_PowerControl"
+DEFAULT_INSTALL_DIR="/usr/local/bin/PowerControl"
 
 if [ -f "$DEFAULT_INSTALL_DIR/.install_path" ]; then
     INSTALL_DIR=$(sudo cat "$DEFAULT_INSTALL_DIR/.install_path")
@@ -200,19 +200,8 @@ while true; do
     esac
 done
 
-echo "${BLUE}Stopping any existing components of ChromeOS_PowerControl (in case of reinstall)${RESET}"
-sudo ectool backlight 1 >/dev/null 2>&1
+echo "${BLUE}Stopping PowerControl (in case of reinstall)${RESET}"
 sudo bash "$INSTALL_DIR/powercontrol" stop 2>/dev/null
-echo ""
-sudo bash "$INSTALL_DIR/batterycontrol" stop 2>/dev/null
-echo ""
-sudo bash "$INSTALL_DIR/fancontrol" stop 2>/dev/null
-echo ""
-sudo bash "$INSTALL_DIR/sleepcontrol" stop 2>/dev/null
-sudo /usr/local/bin/sleepcontrol stop 2>/dev/null
-echo ""
-sudo bash "$INSTALL_DIR/gpucontrol" stop 2>/dev/null
-sleep 0.2
 #sudo pkill -f "/usr/local/bin/gpucontrol" >/dev/null 2>&1
 #sudo pkill -f "/usr/local/bin/fancontrol" >/dev/null 2>&1
 #sudo pkill -f "/usr/local/bin/sleepcontrol" >/dev/null 2>&1
@@ -221,21 +210,18 @@ sleep 0.2
 echo "$INSTALL_DIR" | sudo tee "$INSTALL_DIR/.install_path" >/dev/null
 
 declare -a files=(
-  "powercontrol" "batterycontrol" "fancontrol" "gpucontrol"
-  "sleepcontrol" "deep_suspend.sh"
-  "Uninstall_ChromeOS_PowerControl.sh"
-  "Reinstall_ChromeOS_PowerControl.sh"
-  "LICENSE" "version" "arc.sh"
-  "no_turbo.conf" "batterycontrol.conf"
-  "powercontrol.conf" "fancontrol.conf"
-  "gpucontrol.conf" "sleepcontrol.conf"
+  "powercontrol"
+  "Uninstall_PowerControl.sh"
+  "Reinstall_PowerControl.sh"
+  "version" "no_turbo.conf" 
+  "powercontrol.conf"
 )
 
 for file in "${files[@]}"; do
     dest="$INSTALL_DIR/$file"
 
     echo "${BLUE}Downloading $file to $dest...${RESET}"
-    if sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/$file" -o "$dest"; then
+    if sudo curl -fsSL "https://raw.githubusercontent.com/shadowed1/PowerControl/main/bin/$file" -o "$dest"; then
         if grep -q "@INSTALL_DIR@" "$dest"; then
             sed -i "s|@INSTALL_DIR@|$INSTALL_DIR|g" "$dest"
         fi
@@ -248,13 +234,13 @@ done
 
 OLD_CONFIG_PATH="$INSTALL_DIR/config.sh"
 if [ -d "/home/chronos/user/MyFiles/Downloads" ]; then
-    CONFIG_DIR="/home/chronos/user/MyFiles/Downloads/ChromeOS_PowerControl_Config"
+    CONFIG_DIR="/home/chronos/user/MyFiles/Downloads/PowerControl_Config"
     mkdir -p "$CONFIG_DIR"
 else
-    CONFIG_DIR="/usr/local/bin/ChromeOS_PowerControl_Config"
+    CONFIG_DIR="/usr/local/bin/PowerControl_Config"
     sudo mkdir -p "$CONFIG_DIR"
     sudo chown -R 1000:1000 "$CONFIG_DIR"
-    sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/gui.py -o /bin/powercontrol-gui 2>/dev/null
+    sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/PowerControl/main/bin/gui.py -o /bin/powercontrol-gui 2>/dev/null
     sudo chmod +x /bin/powercontrol-gui 2>/dev/null
     alias powercontrol-gui='sudo -E powercontrol-gui' 
     sudo mkdir -p /usr/share/applications/ /usr/share/icons/hicolor/48x48/apps/
@@ -270,40 +256,15 @@ Terminal=true
 Categories=Utility;System; 
 StartupNotify=true
 EOF
-    sudo curl -Ls https://github.com/shadowed1/ChromeOS_PowerControl/blob/main/icons/powercontrol_200p.png?raw=true -o /usr/share/icons/hicolor/48x48/apps/powercontrol.png 2>/dev/null
+    sudo curl -Ls https://github.com/shadowed1/PowerControl/blob/main/icons/powercontrol_200p.png?raw=true -o /usr/share/icons/hicolor/48x48/apps/powercontrol.png 2>/dev/null
 fi
 
 NEW_CONFIG_PATH="$CONFIG_DIR/config"
-CONFIG_URL="https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/config.sh"
+CONFIG_URL="https://raw.githubusercontent.com/shadowed1/PowerControl/main/config.sh"
 if [ -f "/home/chronos/user/.bashrc" ]; then
     BASHRC="/home/chronos/user/.bashrc"
 else
     BASHRC="$HOME/.bashrc"
-fi
-
-chard_line=$(grep -F 'source' "$BASHRC" | grep -F '.chardrc')
-if [[ -n "$chard_line" ]]; then
-    CHARD_ROOT=$(echo "$chard_line" | sed -n 's/.*source[[:space:]]*"\(.*\)\/\.chardrc".*/\1/p')
-fi
-
-if [[ -n "$CHARD_ROOT" ]]; then
-    echo "${GREEN}Downloading powercontrol-gui to: $CHARD_ROOT ${RESET}"
-    sudo -E curl -fsSL "https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/gui.py" -o "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
-    sudo chmod +x "$CHARD_ROOT/bin/powercontrol-gui" 2>/dev/null
-    sudo mkdir -p "$CHARD_ROOT/usr/share/applications/" "$CHARD_ROOT/usr/share/icons/hicolor/48x48/apps/"
-        cat <<'EOF' | sudo tee "$CHARD_ROOT/usr/share/applications/powercontrol-gui.desktop" > /dev/null
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=PowerControl
-Comment=Get the power to control your CPU, Battery, Fan Curve, GPU, and Sleep for ChromeOS!
-Exec=/bin/powercontrol-gui
-Icon=powercontrol
-Terminal=false
-Categories=Utility;System;
-StartupNotify=true
-EOF
-    sudo curl -Ls https://github.com/shadowed1/ChromeOS_PowerControl/blob/main/icons/powercontrol_200p.png?raw=true -o "$CHARD_ROOT/usr/share/icons/hicolor/48x48/apps/powercontrol.png"
 fi
 
 sudo cp $INSTALL_DIR/config.sh $INSTALL_DIR/config.sh.bak 2>/dev/null
@@ -326,47 +287,11 @@ else
 fi
 
 CONFIG_FILE="$NEW_CONFIG_PATH"
-echo
-FAN_COUNT=$(sudo ectool pwmgetnumfans | awk -F= '{print $2}' | sed -e 's/ //g')
 
-if [ "$FAN_COUNT" -eq 0 ]; then
-    echo "${RESET}${GREEN}Passively cooled device detected, skipping FanControl setup.${RESET}"
-    echo ""
-    SKIP_FANCONTROL=true
-    sed -i '/^STARTUP_FANCONTROL=/d' "$CONFIG_FILE" 2>/dev/null
-    echo "STARTUP_FANCONTROL=0" >> "$CONFIG_FILE"
-else
-    SKIP_FANCONTROL=false
-fi
 
-#detect_suspend_mode
-detect_backlight_path
+
 detect_cpu_type
 
-for d in /sys/class/power_supply/*; do
-    [[ -f "$d/capacity" ]] || { continue; }
-    [[ -f "$d/status" ]] || { continue; }
-    [[ -f "$d/voltage_min_design" ]] || { continue; }
-
-    if [[ -f "$d/type" ]]; then
-        read -r type < "$d/type"
-        [[ "$type" == "Battery" ]] || { continue; }
-    fi
-
-    case "$d" in
-        *hid*|*HID*|*stylus*|*pen*)
-            continue
-            ;;
-    esac
-
-    read -r status < "$d/status"
-    [[ "$status" != "Unknown" ]] || { continue; }
-
-    capacity=$(cat "$d/capacity")
-    echo "${RESET}${GREEN}"
-    echo "Battery: ${BOLD}${capacity}%"
-    echo "${RESET}"
-done
 
 if [ "$IS_INTEL" -eq 1 ]; then
     SHOW_POWERCONTROL_NOTICE=1
@@ -382,18 +307,13 @@ echo "PERF_PATH: $PERF_PATH"
 echo "PERF_PATHS: ${PERF_PATHS[*]}"
 echo "TURBO_PATH: $TURBO_PATH"
 echo "$RESET"
-sudo chmod +x "$INSTALL_DIR/powercontrol" "$INSTALL_DIR/batterycontrol" "$INSTALL_DIR/fancontrol" "$INSTALL_DIR/gpucontrol" "$INSTALL_DIR/sleepcontrol" "$INSTALL_DIR/Uninstall_ChromeOS_PowerControl.sh" "$INSTALL_DIR/config.sh" 2>/dev/null
-sudo touch "$INSTALL_DIR/.batterycontrol_enabled" "$INSTALL_DIR/.powercontrol_enabled" "$INSTALL_DIR/.fancontrol_enabled"
-detect_gpu_freq
-echo "${MAGENTA}Detected GPU Type: $GPU_TYPE"
-echo "GPU_FREQ_PATH: $GPU_FREQ_PATH"
-echo "GPU_MAX_FREQ: $GPU_MAX_FREQ"
-echo "${RESET}"
+sudo chmod +x "$INSTALL_DIR/powercontrol" "$INSTALL_DIR/Uninstall_PowerControl.sh" "$INSTALL_DIR/config.sh" 2>/dev/null
+sudo touch "$INSTALL_DIR/.powercontrol_enabled"
 
 LOG_DIR="/var/log"
-sudo touch "$LOG_DIR/powercontrol.log" "$LOG_DIR/batterycontrol.log" "$LOG_DIR/fancontrol.log" "$LOG_DIR/gpucontrol.log" "$LOG_DIR/sleepcontrol.log"
-sudo chmod 644 "$LOG_DIR/powercontrol.log" "$LOG_DIR/batterycontrol.log" "$LOG_DIR/fancontrol.log" "$LOG_DIR/gpucontrol.log" "$LOG_DIR/sleepcontrol.log" 2>/dev/null
-echo "${YELLOW}${BOLD}Log files for PowerControl, BatteryControl, FanControl, GPUControl, and SleepControl are stored in /var/log/$RESET"
+sudo touch "$LOG_DIR/powercontrol.log" 2>/dev/null
+sudo chmod 644 "$LOG_DIR/powercontrol.log" 2>/dev/null
+echo "${YELLOW}${BOLD}Log file for PowerControl is stored in /var/log/$RESET"
 
 USER_HOME="/home/chronos"
 echo ""
@@ -407,51 +327,18 @@ declare -a ordered_keys=(
   "CPU_POLL"
   "RAMP_UP"
   "RAMP_DOWN"
-  "CHARGE_MAX"
-  "FAN_MIN_TEMP"
-  "FAN_MAX_TEMP"
-  "MIN_FAN"
-  "MAX_FAN"
-  "FAN_POLL"
-  "STEP_UP"
-  "STEP_DOWN"
-  "GPU_TYPE"
-  "GPU_FREQ_PATH"
-  "GPU_MAX_FREQ"
-  "BATTERY_DELAY"
-  "BATTERY_BACKLIGHT"
-  "BATTERY_DIM_DELAY"
-  "POWER_DELAY"
-  "POWER_BACKLIGHT"
-  "POWER_DIM_DELAY"
-  "AUDIO_DETECTION_BATTERY"
-  "AUDIO_DETECTION_POWER"
-  #"SUSPEND_MODE"
-  #"ORIGINAL_SUSPEND_MODE"
-  "LIDSLEEP_BATTERY"
-  "LIDSLEEP_POWER"
   "PERF_PATH"
   "PERF_PATHS"
   "TURBO_PATH"
-  "ORIGINAL_GPU_MAX_FREQ"
-  "PP_OD_FILE"
-  "AMD_SELECTED_SCLK_INDEX"
   "IS_AMD"
   "IS_INTEL"
   "IS_ARM"
-  "BACKLIGHT_NAME"
-  "BRIGHTNESS_PATH"
-  "MAX_BRIGHTNESS_PATH"
 )
 
 declare -a ordered_categories=("PowerControl" "BatteryControl" "FanControl" "GPUControl" "SleepControl" "Platform Configuration")
 declare -A categories=(
   ["PowerControl"]="MAX_TEMP MIN_TEMP MAX_PERF_PCT MIN_PERF_PCT HOTZONE CPU_POLL RAMP_UP RAMP_DOWN"
-  ["BatteryControl"]="CHARGE_MAX"
-  ["FanControl"]="MIN_FAN MAX_FAN FAN_MIN_TEMP FAN_MAX_TEMP STEP_UP STEP_DOWN FAN_POLL"
-  ["GPUControl"]="GPU_MAX_FREQ"
-  ["SleepControl"]="BATTERY_DELAY BATTERY_BACKLIGHT BATTERY_DIM_DELAY POWER_DELAY POWER_BACKLIGHT POWER_DIM_DELAY AUDIO_DETECTION_BATTERY AUDIO_DETECTION_POWER LIDSLEEP_BATTERY LIDSLEEP_POWER"
-  ["Platform Configuration"]="IS_AMD IS_INTEL IS_ARM PERF_PATH PERF_PATHS TURBO_PATH GPU_TYPE GPU_FREQ_PATH ORIGINAL_GPU_MAX_FREQ PP_OD_FILE AMD_SELECTED_SCLK_INDEX BACKLIGHT_NAME BRIGHTNESS_PATH MAX_BRIGHTNESS_PATH"
+  ["Platform Configuration"]="IS_AMD IS_INTEL IS_ARM PERF_PATH PERF_PATHS TURBO_PATH"
 )
 
 if [[ -z "${ORIGINAL_GPU_MAX_FREQ}" ]]; then ORIGINAL_GPU_MAX_FREQ=$GPU_MAX_FREQ; fi
@@ -463,25 +350,6 @@ if [[ -z "${HOTZONE}" ]]; then HOTZONE=79; fi
 if [[ -z "${CPU_POLL}" ]]; then CPU_POLL=1; fi
 if [[ -z "${RAMP_UP}" ]]; then RAMP_UP=10; fi
 if [[ -z "${RAMP_DOWN}" ]]; then RAMP_DOWN=10; fi
-if [[ -z "${CHARGE_MAX}" ]]; then CHARGE_MAX=77; fi
-if [[ -z "${MIN_FAN}" ]]; then MIN_FAN=0; fi
-if [[ -z "${MAX_FAN}" ]]; then MAX_FAN=100; fi
-if [[ -z "${FAN_MIN_TEMP}" ]]; then FAN_MIN_TEMP=46; fi
-if [[ -z "${FAN_MAX_TEMP}" ]]; then FAN_MAX_TEMP=89; fi
-if [[ -z "${STEP_UP}" ]]; then STEP_UP=4; fi
-if [[ -z "${STEP_DOWN}" ]]; then STEP_DOWN=1; fi
-if [[ -z "${FAN_POLL}" ]]; then FAN_POLL=4; fi
-if [[ -z "${BATTERY_DELAY}" ]]; then BATTERY_DELAY=13; fi
-if [[ -z "${BATTERY_BACKLIGHT}" ]]; then BATTERY_BACKLIGHT=10; fi
-if [[ -z "${BATTERY_DIM_DELAY}" ]]; then BATTERY_DIM_DELAY=7; fi
-if [[ -z "${POWER_DELAY}" ]]; then POWER_DELAY=24; fi
-if [[ -z "${POWER_BACKLIGHT}" ]]; then POWER_BACKLIGHT=18; fi
-if [[ -z "${POWER_DIM_DELAY}" ]]; then POWER_DIM_DELAY=12; fi
-if [[ -z "${AUDIO_DETECTION_BATTERY}" ]]; then AUDIO_DETECTION_BATTERY=0; fi
-if [[ -z "${AUDIO_DETECTION_POWER}" ]]; then AUDIO_DETECTION_POWER=1; fi
-#if [[ -z "${ORIGINAL_SUSPEND_MODE}" ]]; then ORIGINAL_SUSPEND_MODE=$SUSPEND_MODE; fi
-if [[ -z "${LIDSLEEP_BATTERY}" ]]; then LIDSLEEP_BATTERY=1; fi
-if [[ -z "${LIDSLEEP_POWER}" ]]; then LIDSLEEP_POWER=1; fi
 
 declare -A defaults=(
   [MAX_TEMP]=$MAX_TEMP
@@ -492,38 +360,11 @@ declare -A defaults=(
   [CPU_POLL]=$CPU_POLL
   [RAMP_UP]=$RAMP_UP
   [RAMP_DOWN]=$RAMP_DOWN
-  [CHARGE_MAX]=$CHARGE_MAX
-  [MIN_FAN]=$MIN_FAN
-  [MAX_FAN]=$MAX_FAN
-  [FAN_MIN_TEMP]=$FAN_MIN_TEMP
-  [FAN_MAX_TEMP]=$FAN_MAX_TEMP
-  [STEP_UP]=$STEP_UP
-  [STEP_DOWN]=$STEP_DOWN
-  [FAN_POLL]=$FAN_POLL
-  [GPU_MAX_FREQ]=$GPU_MAX_FREQ
-  [GPU_TYPE]=$GPU_TYPE
-  [BATTERY_DELAY]=$BATTERY_DELAY
-  [POWER_DELAY]=$POWER_DELAY
-  [BATTERY_BACKLIGHT]=$BATTERY_BACKLIGHT
-  [POWER_BACKLIGHT]=$POWER_BACKLIGHT
-  [AUDIO_DETECTION_BATTERY]=$AUDIO_DETECTION_BATTERY
-  [AUDIO_DETECTION_POWER]=$AUDIO_DETECTION_POWER
-  #[SUSPEND_MODE]=$SUSPEND_MODE
-  #[ORIGINAL_SUSPEND_MODE]=$SUSPEND_MODE
-  [LIDSLEEP_BATTERY]=$LIDSLEEP_BATTERY
-  [LIDSLEEP_POWER]=$LIDSLEEP_POWER
   [PERF_PATH]=$PERF_PATH
   [TURBO_PATH]=$TURBO_PATH
-  [GPU_FREQ_PATH]=$GPU_FREQ_PATH
-  [ORIGINAL_GPU_MAX_FREQ]=$GPU_MAX_FREQ
-  [PP_OD_FILE]=$PP_OD_FILE
-  [AMD_SELECTED_SCLK_INDEX]=$AMD_SELECTED_SCLK_INDEX
   [IS_AMD]=$IS_AMD
   [IS_INTEL]=$IS_INTEL
   [IS_ARM]=$IS_ARM
-  [BACKLIGHT_NAME]=$BACKLIGHT_NAME
-  [BRIGHTNESS_PATH]=$BRIGHTNESS_PATH
-  [MAX_BRIGHTNESS_PATH]=$MAX_BRIGHTNESS_PATH
 )
 
 if [ -f "$CONFIG_FILE" ]; then
@@ -557,18 +398,7 @@ done
 echo "${GREEN}${BOLD}Installing to: $INSTALL_DIR $RESET"
 echo ""
     sudo rm -r /usr/local/bin/powercontrol 2>/dev/null
-    sudo rm -r /usr/local/bin/batterycontrol 2>/dev/null
-    sudo rm -r /usr/local/bin/fancontrol 2>/dev/null
-    sudo rm -r /usr/local/bin/gpucontrol 2>/dev/null
-    sudo rm -r /usr/local/bin/sleepcontrol 2>/dev/null
-    
     sudo ln -sf "$INSTALL_DIR/powercontrol" /usr/local/bin/powercontrol
-    sudo ln -sf "$INSTALL_DIR/batterycontrol" /usr/local/bin/batterycontrol
-    sudo ln -sf "$INSTALL_DIR/fancontrol" /usr/local/bin/fancontrol
-    sudo ln -sf "$INSTALL_DIR/gpucontrol" /usr/local/bin/gpucontrol
-    sudo ln -sf "$INSTALL_DIR/sleepcontrol" /usr/local/bin/sleepcontrol
-    sudo ln -sf "$INSTALL_DIR/arc.sh" /usr/local/bin/arc
-
     echo ""
     
 enable_component_on_boot() {
@@ -580,10 +410,6 @@ enable_component_on_boot() {
 
      case "$component" in
         "PowerControl")   COLOR=${CYAN}${BOLD} ;;
-        "GPUControl")     COLOR=${MAGENTA}${BOLD} ;;
-        "FanControl")     COLOR=${YELLOW}${BOLD} ;;
-        "BatteryControl") COLOR=${GREEN}${BOLD} ;;
-        "SleepControl")   COLOR=${BLUE}${BOLD} ;;
         *)                COLOR=${RESET} ;;
     esac
     
@@ -627,18 +453,6 @@ else
     echo "${YELLOW}Rootfs verification must be disabled to allow startup on boot. ${RESET}"
 fi
 
-if grep -q '^STARTUP_GPUCONTROL=1' "$CONFIG_FILE"; then
-    SHOW_GPUCONTROL_NOTICE=1
-fi
-
-if grep -q '^STARTUP_BATTERYCONTROL=1' "$CONFIG_FILE"; then
-    SHOW_BATTERYCONTROL_NOTICE=1
-fi
-
-if grep -q '^STARTUP_SLEEPCONTROL=1' "$CONFIG_FILE"; then
-    SHOW_SLEEPCONTROL_NOTICE=1
-fi
-
 if grep -q '^STARTUP_POWERCONTROL=1' "$CONFIG_FILE"; then
     SHOW_POWERCONTROL_NOTICE=1
 fi
@@ -650,10 +464,6 @@ start_component_now() {
 
     case "$component" in
         "PowerControl")   COLOR=${CYAN}${BOLD} ;;
-        "GPUControl")     COLOR=${MAGENTA}${BOLD} ;;
-        "FanControl")     COLOR=${YELLOW}${BOLD} ;;
-        "BatteryControl") COLOR=${GREEN}${BOLD} ;;
-        "SleepControl")   COLOR=${BLUE}${BOLD} ;;
         *)                COLOR=${RESET} ;;
     esac
 
@@ -661,14 +471,6 @@ start_component_now() {
     if [[ -z "$start_now" || "$start_now" =~ ^[Yy]$ ]]; then
         sudo "$command" start
         echo ""
-
-        if [[ "$component" == "GPUControl" ]]; then
-            declare -g SHOW_GPUCONTROL_NOTICE=1
-        fi
-
-        if [[ "$component" == "SleepControl" ]]; then
-            declare -g SHOW_SLEEPCONTROL_NOTICE=1
-        fi
 
     else
         echo "You can run it later with: sudo $command start"
@@ -718,7 +520,7 @@ echo "                                         ${YELLOW}║ ╔═════�
 sleep 0.01
 echo "                                         ${GREEN}║ ║ ╔═══════════════════════╗ ║ ║${RESET}"
 sleep 0.01
-echo "                                         ${RESET}║ ║ ║ ChromeOS_PowerControl ║ ║ ║${RESET}"
+echo "                                         ${RESET}║ ║ ║ PowerControl ║ ║ ║${RESET}"
 sleep 0.01
 echo "                                         ${CYAN}║ ║ ╚═══════════════════════╝ ║ ║${RESET}"
 sleep 0.01
@@ -774,164 +576,9 @@ echo "║  sudo powercontrol startup          # Copy or Remove no_turbo.conf & p
 sleep 0.01
 echo "║                                                                                                                    ║"
 sleep 0.01
-echo "╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
-sleep 0.2
-echo "${RESET}${GREEN}╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗"
-sleep 0.01
-echo "║                                                 BatteryControl:                                                    ║"
-sleep 0.01
-echo "╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣"
-sleep 0.01
-echo "║                                                                                                                    ║"
-sleep 0.01
-echo "║  batterycontrol               # Check BatteryControl status                                                        ║"
-sleep 0.01
-echo "║  batterycontrol monitor       # Toggle on/off live monitoring in terminal                                          ║"
-sleep 0.01
-echo "║  batterycontrol help          # Help menu                                                                          ║"
-sleep 0.01
-echo "║  batterycontrol monitor       # Monitor batterycontrol activity                                                    ║"
-sleep 0.01
-echo "║  sudo batterycontrol start    # Start BatteryControl                                                               ║"
-sleep 0.01
-echo "║  sudo batterycontrol stop     # Stop BatteryControl                                                                ║"
-sleep 0.01
-echo "║  sudo batterycontrol 77       # Charge limit set to 77% - minimum of 14% allowed                                   ║"
-sleep 0.01
-echo "║  sudo batterycontrol usage    # Monitor power consumption in real-time                                             ║"
-sleep 0.01
-echo "║  sudo batterycontrol startup  # Copy or Remove batterycontrol.conf at: /etc/init/                                  ║"
-sleep 0.01
-echo "║                                                                                                                    ║"
-echo "╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
-sleep 0.2
-echo "${RESET}${YELLOW}╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗"
-sleep 0.01
-echo "║                                                  FanControl:                                                       ║"
-sleep 0.01
-echo "╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣"
-sleep 0.01
-echo "║                                                                                                                    ║"
-sleep 0.01
-echo "║  fancontrol                       # Show FanControl status                                                         ║"
-sleep 0.01
-echo "║  fancontrol help                  # Help menu                                                                      ║"
-sleep 0.01
-echo "║  fancontrol monitor               # Toggle on/off live monitoring in terminal                                      ║"
-sleep 0.01
-echo "║  sudo fancontrol start            # Start FanControl                                                               ║"
-sleep 0.01
-echo "║  sudo fancontrol stop             # Stop FanControl                                                                ║"
-sleep 0.01
-echo "║  sudo fancontrol min_temp 48      # Min temp threshold                                                             ║"
-sleep 0.01
-echo "║  sudo fancontrol max_temp 81      # Max temp threshold - Limit is 90°C                                             ║"
-sleep 0.01
-echo "║  sudo fancontrol min 0            # Min fan speed %                                                                ║"
-sleep 0.01
-echo "║  sudo fancontrol max 100          # Max fan speed %                                                                ║"
-sleep 0.01
-echo "║  sudo fancontrol step_up 20       # Fan step-up %                                                                  ║"
-sleep 0.01
-echo "║  sudo fancontrol step_down 1      # Fan step-down %                                                                ║"
-sleep 0.01
-echo "║  sudo fancontrol poll 2           # FanControl polling rate in seconds (1 to 10s)                                  ║"
-sleep 0.01
-echo "║  sudo fancontrol startup          # Copy or Remove fancontrol.conf at: /etc/init/                                  ║"
-sleep 0.01
-echo "║  sudo powercontrol limits         # See your CPU's boost limits in seconds and Watts (x86_64 only)                 ║"
-sleep 0. 01
-echo "║                                                                                                                    ║"
-sleep 0.01
-echo "╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
-sleep 0.2
-echo "${RESET}${MAGENTA}╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗"
-echo "║                                                   GPUControl:                                                      ║"
-sleep 0.01
-echo "╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣"
-sleep 0.01
-echo "║                                                                                                                    ║"
-sleep 0.01
-echo "║  gpucontrol                     # Show current GPU info and frequency                                              ║"
-sleep 0.01
-echo "║  gpucontrol help                # Help menu                                                                        ║"
-sleep 0.01
-echo "║  gpucontrol monitor             # Monitor GPU clockspeed in real-time                                              ║"
-sleep 0.01
-echo "║  sudo gpucontrol start          # Start GPUControl                                                                 ║"
-sleep 0.01
-echo "║  sudo gpucontrol stop           # Stop GPUControl                                                                  ║"
-sleep 0.01
-echo "║  sudo gpucontrol restore        # Restore GPU max frequency to original value                                      ║"
-sleep 0.01
-echo "║  sudo gpucontrol 700            # Set GPU max frequency to 700 MHz                                                 ║"
-sleep 0.01
-echo "║  sudo gpucontrol startup        # Copy or Remove gpucontrol.conf at: /etc/init/                                    ║"
-sleep 0.01
-echo "║                                                                                                                    ║"
-sleep 0.01
-echo "╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
-sleep 0.2
-echo "${RESET}${BLUE}╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗"
-echo "║                                                  SleepControl                                                      ║"
-sleep 0.01
-echo "╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣"
-sleep 0.01
-echo "║                                                                                                                    ║"
-sleep 0.01
-echo "║  sleepcontrol                       # Show SleepControl status                                                     ║"
-sleep 0.01
-echo "║  sleepcontrol help                  # Help menu                                                                    ║"
-sleep 0.01
-echo "║  sleepcontrol monitor               # Monitor sleepcontrol's log in realtime (ctrl-c to exit)                      ║"
-sleep 0.01
-echo "║  sleepcontrol powerd                # Monitor powerd.LATEST log in realtime (ctrl-c to exit)                       ║"
-sleep 0.01
-echo "║  sudo sleepcontrol start            # Start SleepControl                                                           ║"
-sleep 0.01
-echo "║  sudo sleepcontrol stop             # Stop SleepControl                                                            ║"
-sleep 0.01
-echo "║  sudo sleepcontrol battery 3 7 12   # When idle, display dims in 3m -> timeout in 7m -> sleeps in 12m on battery   ║"
-sleep 0.01
-echo "║  sudo sleepcontrol power 5 15 30    # When idle, display dims in 5m -> timeout -> 15m -> sleeps in 30m plugged-in  ║"
-sleep 0.01
-echo "║  sudo sleepcontrol battery audio 0  # Disable audio detection on battery; sleep can occur during media playback    ║"
-sleep 0.01
-echo "║  sudo sleepcontrol power audio 1    # Enable audio detection on power; delaying sleep until audio is stopped       ║"
-sleep 0.01
-echo "║  sudo sleepcontrol lid battery 1    # Enable sleep on closing the lid on battery.                                  ║"
-sleep 0.01
-echo "║  sudo sleepcontrol lid power 0      # Disable sleep on closing the lid on power.                                   ║"
-sleep 0.01
-echo "║  sudo sleepcontrol startup          # Copy or Remove sleepcontrol.conf at: /etc/init/                              ║"
-sleep 0.01
-echo "║                                                                                                                    ║"
-sleep 0.01
-echo "╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
-sleep 0.2
-echo "${RESET}${CYAN}${BOLD}╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗"
-sleep 0.01
-echo "║                                              ChromeOS_PowerControl                                                 ║"
-sleep 0.01
-echo "╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣"
-sleep 0.01
-echo "║                                                                                                                    ║"
-sleep 0.01
-echo "║  powercontrol all               # Show status of all ChromeOS_PowerControl components                              ║"
-sleep 0.01
-echo "║  powercontrol help_all          # Global help menu                                                                 ║"
-sleep 0.01
-echo "║  powercontrol gui               # Print commands to install GUI app for Crostini or Chard                          ║"
-sleep 0.01
-echo "║  arc start                      # Pause Android VM to save CPU usage                                               ║"
-sleep 0.01
-echo "║  arc stop                       # Resume Android VM                                                                ║"
-sleep 0.01
 echo "║  sudo powercontrol version      # Check PowerControl version                                                       ║"
 sleep 0.01
-echo "║  sudo powercontrol startup_all  # Copy or Remove all .conf files at: /etc/init/                                    ║"
-sleep 0.01
-echo "║  sudo powercontrol reinstall    # Download and reinstall ChromeOS_PowerControl                                     ║"
+echo "║  sudo powercontrol reinstall    # Download and reinstall PowerControl                                     ║"
 sleep 0.01
 echo "║  sudo powercontrol uninstall    # Run uninstaller                                                                  ║"
 sleep 0.01
@@ -939,42 +586,14 @@ echo "║                                                                       
 sleep 0.01
 echo "╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
 sleep 0.01
-echo "   sudo bash "$INSTALL_DIR/Uninstall_ChromeOS_PowerControl.sh"  # Alternate uninstall method"
+echo "   sudo bash "$INSTALL_DIR/Uninstall_PowerControl.sh"  # Alternate uninstall method"
 sleep 0.01
 echo " ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════"
 sleep 0.01
 echo "${RESET}"
 sleep 0.2
-if [[ "$SHOW_BATTERYCONTROL_NOTICE" -eq 1 ]]; then
-echo "${GREEN}"
-sleep 0.01
-echo "╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗"
-sleep 0.01
-echo "║  ${RESET}${GREEN}${BOLD}BatteryControl Notice:${RESET}${GREEN}                                                                                            ║"
-sleep 0.01
-echo "║  DISABLE Adaptive Charging in Settings → System Preferences → Power to avoid notification spam.                    ║"
-sleep 0.01
-echo "╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝${RESET}"
-fi
-
-#if [[ "$SHOW_GPUCONTROL_NOTICE" -eq 1 ]]; then
-#echo "${MAGENTA}╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗"
-#echo "║  ${RESET}${MAGENTA}${BOLD}GPUControl Notice:${RESET}${MAGENTA}                                                                                                ║"
-#echo "║  As a precaution GPUControl has a 2 minute delay before applying custom clockspeed on boot.                        ║"
-#echo "╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝${RESET}"
-#fi
+ "╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝${RESET}"
 sleep 0.2
-if [[ "$SHOW_SLEEPCONTROL_NOTICE" -eq 1 ]]; then
-echo "${BLUE}╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗"
-sleep 0.01
-echo "║  ${RESET}${BLUE}${BOLD}SleepControl Notice:${RESET}${BLUE}                                                                                              ║"
-sleep 0.01
-echo "║  DISABLE Sleep in Settings → System Preferences → Power to allow SleepControl to function properly.                ║"
-sleep 0.01
-echo "╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝${RESET}"
-sleep 0.01
-echo ""
-fi
 sleep 0.2
 echo "                                      ${RED}╔═══════════════════════════════╗${RESET}"
 sleep 0.01

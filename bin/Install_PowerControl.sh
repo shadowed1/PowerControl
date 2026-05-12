@@ -128,12 +128,7 @@ EOF
 fi
 
 NEW_CONFIG_PATH="$CONFIG_DIR/config"
-CONFIG_URL="https://raw.githubusercontent.com/shadowed1/PowerControl/main/config.sh"
-if [ -f "/home/chronos/user/.bashrc" ]; then
-    BASHRC="/home/chronos/user/.bashrc"
-else
     BASHRC="$HOME/.bashrc"
-fi
 
 if [[ -f "$OLD_CONFIG_PATH" ]]; then
     cp "$OLD_CONFIG_PATH" "$NEW_CONFIG_PATH"
@@ -175,7 +170,7 @@ sudo touch "$LOG_DIR/powercontrol.log" 2>/dev/null
 sudo chmod 644 "$LOG_DIR/powercontrol.log" 2>/dev/null
 echo "${YELLOW}${BOLD}Log file for PowerControl is stored in /var/log/$RESET"
 
-USER_HOME="/home/chronos"
+USER_HOME="$HOME"
 echo ""
 
 declare -a ordered_keys=(

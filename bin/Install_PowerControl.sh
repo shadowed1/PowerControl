@@ -48,10 +48,17 @@ detect_gpu_freq() {
     GPU_TYPE="unknown"
 
     # Intel Xe
-    if [ -f /sys/class/drm/card0/gt_max_freq_mhz ]; then
-        GPU_TYPE="intel"
-        GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
-        GPU_MAX_FREQ=$(sudo cat "$GPU_FREQ_PATH" 2>/dev/null)
+    if ls /sys/class/drm/card*/gt_max_freq_mhz >/dev/null 2>&1; then
+    GPU_TYPE="intel"
+
+    # pick the first valid one (or you can prioritize iGPU later)
+    for f in /sys/class/drm/card*/gt_max_freq_mhz; do
+        if [ -f "$f" ]; then
+            GPU_FREQ_PATH="$f"
+            GPU_MAX_FREQ=$(sudo cat "$GPU_FREQ_PATH" 2>/dev/null)
+            break
+        fi
+    done
 
     # AMD
     elif [ -f /sys/class/drm/card0/device/pp_od_clk_voltage ]; then

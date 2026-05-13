@@ -377,4 +377,4 @@ sleep 0.01
 echo " ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════"
 sleep 0.01
 echo "${RESET}"
-sudo -E /bin/powercontrol-gui 2>/dev/null
+sudo -E /bin/powercontrol-gui 2>/dev/null &

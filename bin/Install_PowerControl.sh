@@ -189,7 +189,7 @@ sudo mkdir -p /usr/share/applications/ /usr/share/icons/hicolor/48x48/apps/
 Version=1.0
 Type=Application
 Name=PowerControl
-Comment=Get the power to control your CPU! 
+Comment=Get the power to control your CPU and GPU! 
 Exec=/bin/powercontrol-gui
 Icon=powercontrol
 Terminal=false

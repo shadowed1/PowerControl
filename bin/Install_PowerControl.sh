@@ -150,6 +150,7 @@ done
 
 echo "${BLUE}Stopping PowerControl (in case of reinstall)${RESET}"
 sudo bash "$INSTALL_DIR/powercontrol" stop 2>/dev/null
+sudo bash "$INSTALL_DIR/gpucontrol" stop 2>/dev/null
 echo "$INSTALL_DIR" | sudo tee "$INSTALL_DIR/.install_path" >/dev/null
 
 declare -a files=(

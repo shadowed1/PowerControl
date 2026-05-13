@@ -42,8 +42,8 @@ wait_for_config() {
 }
 
 wait_for_config
-if ! ( [[ -z "$1" ]] || [[ "$1" == "--h" || "$1" == "-h" "$1" == "h" || "$1" == "--help" || "$1" == "-help" || "$1" == "help" || "$1" == "monitor" || "$1" == "mon" || "$1" == "reinstall" || "$1" == "status" ]] ) && [[ "$(id -u)" -ne 0 ]]; then
-    echo "${RED}PowerControl requires sudo to run.${RESET}"
+
+if ! ( [[ -z "$1" ]] || [[ "$1" == "--h" || "$1" == "-h" || "$1" == "help_all" || "$1" == "h" || "$1" == "--help" || "$1" == "-help" || "$1" == "all" || "$1" == "help" || "$1" == "monitor" || "$1" == "mon" || "$1" == "gui" || "$1" == "reinstall" || "$1" == "status" ]] ) && [[ "$(id -u)" -ne 0 ]]; then    echo "${RED}PowerControl requires sudo to run.${RESET}"
     echo "  Try: sudo powercontrol $*  or  sudo $0 $*"
     exit 1
 fi

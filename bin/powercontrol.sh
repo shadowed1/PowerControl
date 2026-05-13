@@ -47,7 +47,7 @@ wait_for_config() {
 }
 
 wait_for_config
-if ! ( [[ -z "$1" ]] || [[ "$1" == "--h" || "$1" == "-h" || "$1" == "help_all" || "$1" == "h" || "$1" == "--help" || "$1" == "-help" || "$1" == "help" || "$1" == "monitor" || "$1" == "mon" || "$1" == "reinstall" || "$1" == "status" ]] ) && [[ "$(id -u)" -ne 0 ]]; then
+if ! ( [[ -z "$1" ]] || [[ "$1" == "--h" || "$1" == "-h" "$1" == "h" || "$1" == "--help" || "$1" == "-help" || "$1" == "help" || "$1" == "monitor" || "$1" == "mon" || "$1" == "reinstall" || "$1" == "status" ]] ) && [[ "$(id -u)" -ne 0 ]]; then
     echo "${RED}PowerControl requires sudo to run.${RESET}"
     echo "  Try: sudo powercontrol $*  or  sudo $0 $*"
     exit 1
@@ -919,18 +919,6 @@ case "$1" in
     ;;
     all)
         "$INSTALL_DIR/powercontrol" && "$INSTALL_DIR/batterycontrol" && "$INSTALL_DIR/fancontrol" && "$INSTALL_DIR/gpucontrol" && "$INSTALL_DIR/sleepcontrol"
-    ;;
-    startup_all)
-        sudo "$INSTALL_DIR/powercontrol" startup && sudo "$INSTALL_DIR/batterycontrol" startup && sudo "$INSTALL_DIR/fancontrol" startup && sudo "$INSTALL_DIR/gpucontrol" startup && sudo "$INSTALL_DIR/sleepcontrol" startup
-    ;;
-    start_all)
-        sudo "$INSTALL_DIR/powercontrol" start && sudo "$INSTALL_DIR/batterycontrol" start && sudo "$INSTALL_DIR/sleepcontrol" start && sudo "$INSTALL_DIR/fancontrol" start && sudo "$INSTALL_DIR/gpucontrol" start
-    ;;
-    stop_all)
-        sudo "$INSTALL_DIR/powercontrol" stop && sudo "$INSTALL_DIR/batterycontrol" stop && sudo "$INSTALL_DIR/sleepcontrol" stop && sudo "$INSTALL_DIR/fancontrol" stop && sudo "$INSTALL_DIR/gpucontrol" stop
-    ;;
-    help_all)
-        "$INSTALL_DIR/powercontrol" help && "$INSTALL_DIR/batterycontrol" help && "$INSTALL_DIR/fancontrol" help && "$INSTALL_DIR/gpucontrol" help && "$INSTALL_DIR/sleepcontrol" help
     ;;
     limits|limit)
         limits

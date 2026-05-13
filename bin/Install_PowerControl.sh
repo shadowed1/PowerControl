@@ -8,7 +8,7 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 SHOW_POWERCONTROL_NOTICE=0
-TEST_FILE="/etc/init/.boot_test"
+TEST_FILE="/etc/systemd/system/"
 detect_cpu_type() {
     CPU_VENDOR=$(grep -m1 'vendor_id' /proc/cpuinfo | awk '{print $3}' || echo "unknown")
     IS_INTEL=0
@@ -257,7 +257,7 @@ enable_component_on_boot() {
     local component="$1"
     local config_file="$2"
     local var_name="STARTUP_$(echo "$component" | tr '[:lower:]' '[:upper:]')"
-    local target_file="/etc/init/$(basename "$config_file")"
+    local target_file="/etc/systemd/system/$(basename "$config_file")"
 
      case "$component" in
         "PowerControl")   COLOR=${CYAN}${BOLD} ;;
@@ -358,7 +358,7 @@ echo "║  sudo powercontrol ramp_up 15       # % in steps CPU will increase in 
 sleep 0.01
 echo "║  sudo powercontrol ramp_down 20     # % in steps CPU will decrease in clockspeed per second                        ║"
 sleep 0.01
-echo "║  sudo powercontrol startup          # Copy or Remove no_turbo.service & powercontrol.service at: /etc/init/        ║"
+echo "║  sudo powercontrol startup          # Copy or Remove no_turbo.service & powercontrol.service                       ║"
 sleep 0.01
 echo "║                                                                                                                    ║"
 sleep 0.01

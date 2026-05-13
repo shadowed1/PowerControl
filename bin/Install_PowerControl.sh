@@ -8,6 +8,7 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 SHOW_POWERCONTROL_NOTICE=0
+SHOW_GPUCONTROL_NOTICE=0
 TEST_FILE="/etc/systemd/system/.test"
 detect_cpu_type() {
     CPU_VENDOR=$(grep -m1 'vendor_id' /proc/cpuinfo | awk '{print $3}' || echo "unknown")
@@ -39,6 +40,71 @@ detect_cpu_type() {
             mapfile -t PERF_PATHS < <(find /sys/devices/system/cpu/cpufreq/ -type f -name 'scaling_max_freq' 2>/dev/null)
             ;;
     esac
+}
+
+detect_gpu_freq() {
+    GPU_FREQ_PATH=""
+    GPU_MAX_FREQ=""
+    GPU_TYPE="unknown"
+
+    # Intel Xe
+    if [ -f /sys/class/drm/card0/gt_max_freq_mhz ]; then
+        GPU_TYPE="intel"
+        GPU_FREQ_PATH="/sys/class/drm/card0/gt_max_freq_mhz"
+        GPU_MAX_FREQ=$(sudo cat "$GPU_FREQ_PATH" 2>/dev/null)
+
+    # AMD
+    elif [ -f /sys/class/drm/card0/device/pp_od_clk_voltage ]; then
+        GPU_TYPE="amd"
+        PP_OD_FILE="/sys/class/drm/card0/device/pp_od_clk_voltage"
+        mapfile -t SCLK_LINES < <(sudo grep -i '^sclk' "$PP_OD_FILE" 2>/dev/null)
+        if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
+            GPU_MAX_FREQ=$(printf '%s\n' "${SCLK_LINES[@]}" \
+                | sed -n 's/.*\([0-9]\{1,\}\)[Mm][Hh][Zz].*/\1/p' \
+                | sort -nr | head -n1)
+        fi
+        GPU_FREQ_PATH="$PP_OD_FILE"
+        GPU_MAX_FREQ=${GPU_MAX_FREQ:-0}
+
+    # AMD GCN
+    elif [ -f /sys/class/drm/card0/device/pp_dpm_sclk ]; then
+        GPU_TYPE="amd"
+        PP_DPM_SCLK="/sys/class/drm/card0/device/pp_dpm_sclk"
+        GPU_MAX_FREQ=$(grep -oi '[0-9]\+mhz' "$PP_DPM_SCLK" | grep -oi '[0-9]\+' | sort -nr | head -n1)
+        GPU_FREQ_PATH="$PP_DPM_SCLK"
+        GPU_MAX_FREQ=${GPU_MAX_FREQ:-0}
+
+    # Mali / Adreno
+    else
+        for d in /sys/class/devfreq/*; do
+            if echo "$d" | grep -qiE 'mali|gpu'; then
+                if [ -f "$d/max_freq" ]; then
+                    GPU_TYPE="mali"
+                    GPU_FREQ_PATH="$d/max_freq"
+                    GPU_MAX_FREQ=$(sudo cat "$GPU_FREQ_PATH" 2>/dev/null)
+                    break
+                elif [ -f "$d/available_frequencies" ]; then
+                    GPU_TYPE="mali"
+                    GPU_FREQ_PATH="$d/available_frequencies"
+                    GPU_MAX_FREQ=$(sudo tr ' ' '\n' < "$GPU_FREQ_PATH" 2>/dev/null | sort -nr | head -n1)
+                    break
+                fi
+            fi
+        done
+
+        # Adreno Fallback
+        if [ "$GPU_TYPE" = "unknown" ] && [ -d /sys/class/kgsl/kgsl-3d0 ]; then
+            if [ -f /sys/class/kgsl/kgsl-3d0/max_gpuclk ]; then
+                GPU_TYPE="adreno"
+                GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/max_gpuclk"
+                GPU_MAX_FREQ=$(sudo cat "$GPU_FREQ_PATH" 2>/dev/null)
+            elif [ -f /sys/class/kgsl/kgsl-3d0/gpuclk ]; then
+                GPU_TYPE="adreno"
+                GPU_FREQ_PATH="/sys/class/kgsl/kgsl-3d0/gpuclk"
+                GPU_MAX_FREQ=$(sudo cat "$GPU_FREQ_PATH" 2>/dev/null)
+            fi
+        fi
+    fi
 }
 
 INSTALL_DIR="/usr/local/bin/PowerControl"
@@ -116,9 +182,9 @@ Version=1.0
 Type=Application
 Name=PowerControl
 Comment=Get the power to control your CPU! 
-Exec=sudo -E /bin/powercontrol-gui
+Exec=/bin/powercontrol-gui
 Icon=powercontrol
-Terminal=true
+Terminal=false
 Categories=Utility;System; 
 StartupNotify=true
 EOF
@@ -159,13 +225,18 @@ echo "PERF_PATH: $PERF_PATH"
 echo "PERF_PATHS: ${PERF_PATHS[*]}"
 echo "TURBO_PATH: $TURBO_PATH"
 echo "$RESET"
-sudo chmod +x "$INSTALL_DIR/powercontrol" "$INSTALL_DIR/Uninstall_PowerControl.sh" "$INSTALL_DIR/config.sh" 2>/dev/null
+sudo chmod +x "$INSTALL_DIR/powercontrol" "$INSTALL_DIR/gpucontrol" "$INSTALL_DIR/Uninstall_PowerControl.sh" "$INSTALL_DIR/config.sh" 2>/dev/null
 sudo touch "$INSTALL_DIR/.powercontrol_enabled"
+detect_gpu_freq
+echo "${MAGENTA}Detected GPU Type: $GPU_TYPE"
+echo "GPU_FREQ_PATH: $GPU_FREQ_PATH"
+echo "GPU_MAX_FREQ: $GPU_MAX_FREQ"
+echo "${RESET}"
 
 LOG_DIR="/var/log"
 sudo touch "$LOG_DIR/powercontrol.log" 2>/dev/null
 sudo chmod 644 "$LOG_DIR/powercontrol.log" 2>/dev/null
-echo "${YELLOW}${BOLD}Log file for PowerControl is stored in /var/log/$RESET"
+echo "${YELLOW}${BOLD}Log files for PowerControl and GPUControl are stored in /var/log/$RESET"
 
 USER_HOME="$HOME"
 echo ""
@@ -182,17 +253,24 @@ declare -a ordered_keys=(
   "PERF_PATH"
   "PERF_PATHS"
   "TURBO_PATH"
+  "GPU_TYPE"
+  "GPU_FREQ_PATH"
+  "GPU_MAX_FREQ"
+  "ORIGINAL_GPU_MAX_FREQ"
+  "PP_OD_FILE"
+  "AMD_SELECTED_SCLK_INDEX"
   "IS_AMD"
   "IS_INTEL"
   "IS_ARM"
 )
 
-declare -a ordered_categories=("PowerControl" "Platform Configuration")
+declare -a ordered_categories=("PowerControl" "GPUControl" "Platform Configuration")
 declare -A categories=(
   ["PowerControl"]="MAX_TEMP MIN_TEMP MAX_PERF_PCT MIN_PERF_PCT HOTZONE CPU_POLL RAMP_UP RAMP_DOWN"
-  ["Platform Configuration"]="IS_AMD IS_INTEL IS_ARM PERF_PATH PERF_PATHS TURBO_PATH"
-)
-
+  ["GPUControl"]="GPU_MAX_FREQ"
+  ["Platform Configuration"]="IS_AMD IS_INTEL IS_ARM PERF_PATH PERF_PATHS TURBO_PATH GPU_TYPE GPU_FREQ_PATH ORIGINAL_GPU_MAX_FREQ PP_OD_FILE AMD_SELECTED_SCLK_INDEX")
+  
+if [[ -z "${ORIGINAL_GPU_MAX_FREQ}" ]]; then ORIGINAL_GPU_MAX_FREQ=$GPU_MAX_FREQ; fi
 if [[ -z "${MAX_TEMP}" ]]; then MAX_TEMP=90; fi
 if [[ -z "${MIN_TEMP}" ]]; then MIN_TEMP=63; fi
 if [[ -z "${MAX_PERF_PCT}" ]]; then MAX_PERF_PCT=100; fi
@@ -213,6 +291,12 @@ declare -A defaults=(
   [RAMP_DOWN]=$RAMP_DOWN
   [PERF_PATH]=$PERF_PATH
   [TURBO_PATH]=$TURBO_PATH
+  [GPU_MAX_FREQ]=$GPU_MAX_FREQ
+  [GPU_TYPE]=$GPU_TYPE
+  [GPU_FREQ_PATH]=$GPU_FREQ_PATH
+  [ORIGINAL_GPU_MAX_FREQ]=$GPU_MAX_FREQ
+  [PP_OD_FILE]=$PP_OD_FILE
+  [AMD_SELECTED_SCLK_INDEX]=$AMD_SELECTED_SCLK_INDEX
   [IS_AMD]=$IS_AMD
   [IS_INTEL]=$IS_INTEL
   [IS_ARM]=$IS_ARM
@@ -249,7 +333,9 @@ done
 echo "${GREEN}${BOLD}Installing to: $INSTALL_DIR $RESET"
 echo ""
     sudo rm -r /usr/local/bin/powercontrol 2>/dev/null
+    sudo rm -r /usr/local/bin/gpucontrol 2>/dev/null
     sudo ln -sf "$INSTALL_DIR/powercontrol" /usr/local/bin/powercontrol
+    sudo ln -sf "$INSTALL_DIR/gpucontrol" /usr/local/bin/gpucontrol
     echo ""
     
 enable_component_on_boot() {
@@ -261,6 +347,7 @@ enable_component_on_boot() {
 
      case "$component" in
         "PowerControl")   COLOR=${CYAN}${BOLD} ;;
+        "GPUControl")     COLOR=${MAGENTA}${BOLD} ;;
         *)                COLOR=${RESET} ;;
     esac
     
@@ -288,6 +375,7 @@ if sudo touch "$TEST_FILE" 2>/dev/null; then
 
     if [[ -z "$link_cmd" || "$link_cmd" =~ ^[Yy]$ ]]; then
         enable_component_on_boot "PowerControl" "$INSTALL_DIR/powercontrol.service"
+        enable_component_on_boot "GPUControl" "$INSTALL_DIR/gpucontrol.service"
     else
         echo "Skipping boot-time setup."
     fi
@@ -297,6 +385,10 @@ fi
 
 if grep -q '^STARTUP_POWERCONTROL=1' "$CONFIG_FILE"; then
     SHOW_POWERCONTROL_NOTICE=1
+fi
+
+if grep -q '^STARTUP_GPUCONTROL=1' "$CONFIG_FILE"; then
+    SHOW_GPUCONTROL_NOTICE=1
 fi
 
 start_component_now() {

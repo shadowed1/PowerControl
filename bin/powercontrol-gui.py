@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ChromeOS_PowerControl GUI
+PowerControl GUI
 """
 
 import gi
@@ -24,11 +24,11 @@ class ConfigEditor(Gtk.Window):
     def __init__(self):
         settings = Gtk.Settings.get_default()
         settings.set_property("gtk-application-prefer-dark-theme", True)
-        super().__init__(title="ChromeOS_PowerControl GUI")
+        super().__init__(title="PowerControl GUI")
         self.set_default_size(700, 600)
         headerbar = Gtk.HeaderBar()
         headerbar.set_show_close_button(True)
-        headerbar.props.title = "ChromeOS_PowerControl GUI"
+        headerbar.props.title = "PowerControl GUI"
         headerbar.set_decoration_layout("menu:minimize,maximize,close")
         self.set_titlebar(headerbar)
         self.reload_btn = Gtk.Button()
@@ -50,10 +50,7 @@ class ConfigEditor(Gtk.Window):
             self.show_error_dialog(
                 "Config File Not Found",
                 "Could not find config file at:\n"
-                "/mnt/chromeos/MyFiles/Downloads/ChromeOS_PowerControl_Config/config\n"
-                "/mnt/shared/MyFiles/Downloads/ChromeOS_PowerControl_Config/config\n"
-                "/usr/local/bin//ChromeOS_PowerControl_Config/config\n"
-                "/home/chronos/user/MyFiles/Downloads/ChromeOS_PowerControl_Config/config\n\n"
+                "/usr/local/bin/PowerControl_Config/config\n\n"
                 "Please ensure the folder is shared to Crostini/Chard."
             )
             self.destroy()
@@ -67,10 +64,7 @@ class ConfigEditor(Gtk.Window):
 
     def find_config_file(self):
         possible_paths = [
-            "/mnt/chromeos/MyFiles/Downloads/ChromeOS_PowerControl_Config/config",
             "/usr/local/bin/ChromeOS_PowerControl_Config/config",
-            os.path.expanduser("/home/chronos/user/MyFiles/Downloads/ChromeOS_PowerControl_Config/config"),
-            "/mnt/shared/MyFiles/Downloads/ChromeOS_PowerControl_Config/config"
         ]
         for path in possible_paths:
             if os.path.exists(path):

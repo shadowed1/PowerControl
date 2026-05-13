@@ -8,7 +8,7 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 SHOW_POWERCONTROL_NOTICE=0
-TEST_FILE="/etc/systemd/system/"
+TEST_FILE="/etc/systemd/system/.test"
 detect_cpu_type() {
     CPU_VENDOR=$(grep -m1 'vendor_id' /proc/cpuinfo | awk '{print $3}' || echo "unknown")
     IS_INTEL=0
@@ -268,6 +268,8 @@ enable_component_on_boot() {
     if [[ -z "$move_config" || "$move_config" =~ ^[Yy]$ ]]; then
         sudo cp "$config_file" "$target_file"
         echo "$var_name=1" | sudo tee -a "$CONFIG_FILE" > /dev/null
+        sudo systemctl daemon-reload
+        sudo systemctl enable --now $config_file
         echo ""
     else
         echo "$component must be started manually on boot."

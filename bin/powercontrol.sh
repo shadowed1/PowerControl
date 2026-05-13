@@ -600,11 +600,11 @@ uninstall_script() {
         exit 1
     fi
 
-    local script="$INSTALL_DIR/Uninstall_ChromeOS_PowerControl.sh"
+    local script="$INSTALL_DIR/Uninstall_PowerControl.sh"
 
     if [ -d "$INSTALL_DIR" ]; then
         if [ -x "$script" ]; then
-            echo "Uninstalling ChromeOS PowerControl..."
+            echo "Uninstalling PowerControl..."
             sudo bash "$script"
         else
             echo "${RED}Uninstall script not found or not executable at: $script${RESET}"
@@ -617,7 +617,7 @@ uninstall_script() {
 }
 
 reinstall_script() {
-    curl -L https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/bin/Install_PowerControl.sh -o ~/Install_PowerControl.sh
+    curl -L https://raw.githubusercontent.com/shadowed1/PowerControl/main/bin/Install_PowerControl.sh -o ~/Install_PowerControl.sh
     sudo mkdir -p /usr/local/bin
     sudo -E bash ~/Install_PowerControl.sh
     exit 0
@@ -647,9 +647,9 @@ echo "║  sudo powercontrol poll 1        # PowerControl polling rate in second
 echo "║  sudo powercontrol limits        # See your CPU's boost limits in seconds and Watts (x86_64 only)   ║"
 echo "║  sudo powercontrol startup       # Copy or Remove no_turbo.conf & powercontrol.conf at: /etc/init/  ║"
 echo "║  sudo powercontrol startup_all   # Copy or Remove all .conf files at: /etc/init/                    ║"
-echo "║  sudo powercontrol reinstall     # Redownload and reinstall ChromeOS_PowerControl from Github       ║"
-echo "║  sudo powercontrol start_all     # Start all ChromeOS_PowerControl programs                         ║"
-echo "║  sudo powercontrol uninstall     # Uninstall ChromeOS_PowerControl                                  ║"
+echo "║  sudo powercontrol reinstall     # Redownload and reinstall PowerControl from Github       ║"
+echo "║  sudo powercontrol start_all     # Start all PowerControl programs                         ║"
+echo "║  sudo powercontrol uninstall     # Uninstall PowerControl                                  ║"
 echo "║  sudo powercontrol version       # Check PowerControl version                                       ║"
 echo "║                                                                                                     ║"
 echo "╚═════════════════════════════════════════════════════════════════════════════════════════════════════╝"
@@ -883,7 +883,7 @@ case "$1" in
             CURRENT_VER=$(cat "$INSTALL_DIR/version")
             CURRENT_VER_NO=$(echo "$CURRENT_VER" | sed -e 's/VERSION=//' -e 's/"//g' -e 's/\.//g' -e 's/^0*//')
     
-            LATEST_VER=$(curl -Ls https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/version)
+            LATEST_VER=$(curl -Ls https://raw.githubusercontent.com/shadowed1/PowerControl/main/bin/version)
             LATEST_VER_NO=$(echo "$LATEST_VER" | sed -e 's/VERSION=//' -e 's/"//g' -e 's/\.//g' -e 's/^0*//')
     
             if (( 10#$CURRENT_VER_NO < 10#$LATEST_VER_NO )); then
@@ -893,7 +893,7 @@ case "$1" in
                 choice=${choice:-Y}
                 if [[ "$choice" =~ ^[Yy]$ ]]; then
                     echo "${RESET}${GREEN}Reinstalling!${RESET}"
-                    bash <(curl -s "https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/Reinstall_ChromeOS_PowerControl.sh?$(date +%s)")
+                    bash <(curl -s "https://raw.githubusercontent.com/shadowed1/PowerControl/main/bin/Reinstall_PowerControl.sh?$(date +%s)")
                 else
                     echo "${RED}Skipping reinstall.${RESET}"
                 fi

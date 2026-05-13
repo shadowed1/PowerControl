@@ -42,14 +42,14 @@ case "$choice" in
         sudo bash "$INSTALL_DIR/powercontrol" stop 2>/dev/null
         sudo bash "$INSTALL_DIR/powercontrol" max_perf_pct 100 2>/dev/null
         sudo bash "$INSTALL_DIR/powercontrol" no_turbo 0 2>/dev/null
-        remove_file_with_message "$INSTALL_DIR/no_turbo.conf"
-        remove_file_with_message "$INSTALL_DIR/powercontrol.conf"
+        remove_file_with_message "$INSTALL_DIR/no_turbo.service"
+        remove_file_with_message "$INSTALL_DIR/powercontrol.service"
         remove_file_with_message /etc/init/no_turbo.conf
         remove_file_with_message /etc/init/powercontrol.conf
-        remove_file_with_message /usr/local/bin/Install_Powercontrol.sh
+        sudo rm -f /usr/local/bin/Install_Powercontrol.sh 2>/dev/null
         remove_file_with_message /usr/local/bin/powercontrol
         remove_file_with_message /var/log/powercontrol.log
-        remove_file_with_message "$INSTALL_DIR/config.sh" 2>/dev/null
+        remove_file_with_message "$INSTALL_DIR/version"
         sudo rm -f "$INSTALL_DIR/.powercontrol_enabled" 2>/dev/null
         sudo rm -f "$INSTALL_DIR/Reinstall_PowerControl.sh" 2>/dev/null
         sudo rm -f "$INSTALL_DIR/config.sh.bak" 2>/dev/null

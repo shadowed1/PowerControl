@@ -796,6 +796,8 @@ case "$1" in
                     echo "Copying no_turbo.service to /etc/systemd/system/..."
                     sudo cp "$CONF_SOURCE_NO_TURBO" "/etc/systemd/system/"
                     echo "${CYAN}no_turbo.service copied.${RESET}"
+                    sudo systemctl daemon-reload
+                    sudo systemctl enable --now no_turbo.service
                 else
                     echo "Intel Turbo Boost will start automatically."
                     sudo rm -f /etc/systemd/system/no_turbo.service 2>/dev/null

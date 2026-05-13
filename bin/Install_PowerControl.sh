@@ -159,6 +159,7 @@ declare -a files=(
   "Reinstall_PowerControl.sh"
   "version" "no_turbo.service" 
   "powercontrol.service"
+  "gpucontrol.service"
 )
 
 for file in "${files[@]}"; do

@@ -1,0 +1,12 @@
+[Unit]
+Description=PowerControl
+After=multi-user.target
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/powercontrol __powercontrol_monitor__
+Restart=always
+RestartSec=20
+StandardOutput=append:/var/log/powercontrol.log
+StandardError=append:/var/log/powercontrol.log
+[Install]
+WantedBy=multi-user.target

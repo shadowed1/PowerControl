@@ -405,6 +405,7 @@ start_component_now() {
 
     case "$component" in
         "PowerControl")   COLOR=${CYAN}${BOLD} ;;
+        "GPUControl")     COLOR=${MAGENTA}${BOLD} ;;
         *)                COLOR=${RESET} ;;
     esac
 

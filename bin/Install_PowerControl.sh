@@ -105,7 +105,7 @@ for file in "${files[@]}"; do
 done
 
 OLD_CONFIG_PATH="$INSTALL_DIR/config.sh"
-CONFIG_DIR="$INSTALL_DIR"
+CONFIG_DIR="/usr/local/bin/ChromeOS_PowerControl_Config"
 sudo mkdir -p "$CONFIG_DIR"
 sudo chown -R 1000:1000 "$CONFIG_DIR"
 sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/PowerControl/main/bin/gui.py -o /bin/powercontrol-gui 2>/dev/null
@@ -128,7 +128,7 @@ EOF
 fi
 
 NEW_CONFIG_PATH="$CONFIG_DIR/config"
-    BASHRC="$HOME/.bashrc"
+BASHRC="$HOME/.bashrc"
 
 if [[ -f "$OLD_CONFIG_PATH" ]]; then
     cp "$OLD_CONFIG_PATH" "$NEW_CONFIG_PATH"

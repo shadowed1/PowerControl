@@ -9,11 +9,7 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 LOG_FILE="/var/log/gpucontrol.log"
 INSTALL_DIR="@INSTALL_DIR@"
-if [ -d "/home/chronos/user/MyFiles/Downloads" ]; then
-    CONFIG_FILE="/home/chronos/user/MyFiles/Downloads/ChromeOS_PowerControl_Config/config"
-else
-    CONFIG_FILE="/usr/local/bin/ChromeOS_PowerControl_Config/config"
-fi
+CONFIG_FILE="/usr/local/bin/PowerControl_Config/config"
 GPU_MAX_FREQ=
 ORIGINAL_GPU_MAX_FREQ=
 timestamp=$(printf '%(%Y-%m-%d %H:%M:%S)T\n' -1)
@@ -23,7 +19,7 @@ CONF_SOURCE="$INSTALL_DIR/gpucontrol.conf"
 CONF_TARGET="/etc/init/gpucontrol.conf"
 
 wait_for_config() {
-    local config_dir="/home/chronos/user/MyFiles/Downloads/ChromeOS_PowerControl_Config"
+    local config_dir="/usr/local/bin/PowerControl_Config/config"
     local max_wait=300
     local elapsed=0
     

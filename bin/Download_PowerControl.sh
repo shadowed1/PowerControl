@@ -23,4 +23,4 @@ echo ""
 rm -f ~/Install_PowerControl.sh 2>/dev/null
 curl -L https://raw.githubusercontent.com/shadowed1/PowerControl/main/bin/Install_PowerControl.sh -o ~/Install_PowerControl.sh
 chmod +x ~/Install_PowerControl.sh
-sudo -E ~/Install_PowerControl.sh
+sudo -E bash ~/Install_PowerControl.sh

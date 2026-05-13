@@ -22,7 +22,7 @@ IS_INTEL=0
 IS_ARM=0
 timestamp=$(printf '%(%Y-%m-%d %H:%M:%S)T\n' -1)
 CONF_SOURCE="$INSTALL_DIR/powercontrol.conf"
-CONF_TARGET="/etc/init/powercontrol.conf"
+CONF_TARGET="/etc/systemd/system/powercontrol.conf"
 
 wait_for_config() {
     local max_wait=300
@@ -645,11 +645,11 @@ echo "║  sudo powercontrol ramp_down 20  # % in steps CPU will decrease in clo
 echo "║  sudo powercontrol hotzone 78    # Temperature threshold for aggressive thermal management          ║"
 echo "║  sudo powercontrol poll 1        # PowerControl polling rate in seconds (0.1s - 5s)                 ║"
 echo "║  sudo powercontrol limits        # See your CPU's boost limits in seconds and Watts (x86_64 only)   ║"
-echo "║  sudo powercontrol startup       # Copy or Remove no_turbo.conf & powercontrol.conf at: /etc/init/  ║"
-echo "║  sudo powercontrol startup_all   # Copy or Remove all .conf files at: /etc/init/                    ║"
-echo "║  sudo powercontrol reinstall     # Redownload and reinstall PowerControl from Github       ║"
-echo "║  sudo powercontrol start_all     # Start all PowerControl programs                         ║"
-echo "║  sudo powercontrol uninstall     # Uninstall PowerControl                                  ║"
+echo "║  sudo powercontrol startup       # Copy or Remove no_turbo.conf & powercontrol.conf at:             ║"
+echo "║  sudo powercontrol startup_all   # Copy or Remove all .conf files at: /etc/systemd/system/          ║"
+echo "║  sudo powercontrol reinstall     # Redownload and reinstall PowerControl from Github                ║"
+echo "║  sudo powercontrol start_all     # Start all PowerControl programs                                  ║"
+echo "║  sudo powercontrol uninstall     # Uninstall PowerControl                                           ║"
 echo "║  sudo powercontrol version       # Check PowerControl version                                       ║"
 echo "║                                                                                                     ║"
 echo "╚═════════════════════════════════════════════════════════════════════════════════════════════════════╝"
@@ -785,39 +785,41 @@ case "$1" in
        tail -f /var/log/powercontrol.log
     ;;
     startup)
-        CONF_SOURCE="$INSTALL_DIR/powercontrol.conf"
-        CONF_TARGET="/etc/init/powercontrol.conf"
+        CONF_SOURCE="$INSTALL_DIR/powercontrol.service"
+        CONF_TARGET="/etc/systemd/system/powercontrol.conf"
         CONF_SOURCE_NO_TURBO="$INSTALL_DIR/no_turbo.conf"
         
         if [ "$IS_INTEL" -eq 1 ]; then
             read -p "Do you want to disable Turbo Boost automatically on startup? (Y/n): " choice
             if [[ "$choice" =~ ^[Yy]$ ]]; then
                 if [ -f "$CONF_SOURCE_NO_TURBO" ]; then
-                    echo "Copying no_turbo.conf to /etc/init/..."
-                    sudo cp "$CONF_SOURCE_NO_TURBO" "/etc/init/"
+                    echo "Copying no_turbo.conf to /etc/systemd/system/..."
+                    sudo cp "$CONF_SOURCE_NO_TURBO" "/etc/systemd/system/"
                     echo "${CYAN}no_turbo.conf copied.${RESET}"
                 else
                     echo "Intel Turbo Boost will start automatically."
-                    sudo rm -f /etc/init/no_turbo.conf 2>/dev/null
+                    sudo rm -f /etc/systemd/system/no_turbo.conf 2>/dev/null
                 fi
             else
                 echo "Intel Turbo Boost enabled on startup."
-                sudo rm -r /etc/init/no_turbo.conf 2>/dev/null
+                sudo rm -f /etc/systemd/system/no_turbo.conf 2>/dev/null
             fi
         fi
     
         read -p "Do you want PowerControl to startup automatically on boot? (Y/n): " choice
         if [[ "$choice" =~ ^[Yy]$ ]]; then
             if [ -f "$CONF_SOURCE" ]; then
-                echo "Copying powercontrol.conf to /etc/init/..."
+                echo "Copying powercontrol.conf to /etc/systemd/system/"
                 sudo cp "$CONF_SOURCE" "$CONF_TARGET"
                 echo "${CYAN}powercontrol.conf copied.${RESET}"
+                sudo systemctl daemon-reload
+                sudo systemctl enable --now powercontrol.service
             else
                 echo "${RED}powercontrol.conf not found at $CONF_SOURCE${RESET}"
             fi
         else
             echo "PowerControl will not startup automatically on boot."
-            sudo rm -f /etc/init/powercontrol.conf
+            sudo rm -f /etc/systemd/system/powercontrol.conf
         fi
     ;;
     ramp_up)

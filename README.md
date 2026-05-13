@@ -1,8 +1,10 @@
 # PowerControl
-### How to Install:
+## How to Install:
 Open Terminal, copy paste, and run: 
 
  <pre>bash <(curl -s "https://raw.githubusercontent.com/shadowed1/PowerControl/main/bin/Download_PowerControl.sh?$(date +%s)")</pre>
+
+### Supports all Intel, AMD, and ARM64 (including Apple) CPU's!
 
 __How It Works:__
 

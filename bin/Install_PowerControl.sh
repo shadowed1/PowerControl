@@ -125,7 +125,6 @@ Categories=Utility;System;
 StartupNotify=true
 EOF
     sudo curl -Ls https://github.com/shadowed1/PowerControl/blob/main/icons/bin/icons/Autothrottle_Dark200p.png?raw=true -o /usr/share/icons/hicolor/48x48/apps/powercontrol.png 2>/dev/null
-fi
 
 NEW_CONFIG_PATH="$CONFIG_DIR/config"
 BASHRC="$HOME/.bashrc"

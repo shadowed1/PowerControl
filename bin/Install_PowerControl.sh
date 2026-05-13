@@ -108,7 +108,7 @@ OLD_CONFIG_PATH="$INSTALL_DIR/config.sh"
 CONFIG_DIR="/usr/local/bin/ChromeOS_PowerControl_Config"
 sudo mkdir -p "$CONFIG_DIR"
 sudo chown -R 1000:1000 "$CONFIG_DIR"
-sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/PowerControl/main/bin/gui.py -o /bin/powercontrol-gui 2>/dev/null
+sudo curl -fsSL https://raw.githubusercontent.com/shadowed1/PowerControl/main/bin/powercontrol-gui.py -o /bin/powercontrol-gui 2>/dev/null
 sudo chmod +x /bin/powercontrol-gui 2>/dev/null
 alias powercontrol-gui='sudo -E powercontrol-gui' 
 sudo mkdir -p /usr/share/applications/ /usr/share/icons/hicolor/48x48/apps/
@@ -124,7 +124,7 @@ Terminal=true
 Categories=Utility;System; 
 StartupNotify=true
 EOF
-    sudo curl -Ls https://github.com/shadowed1/PowerControl/blob/main/icons/powercontrol_200p.png?raw=true -o /usr/share/icons/hicolor/48x48/apps/powercontrol.png 2>/dev/null
+    sudo curl -Ls https://github.com/shadowed1/PowerControl/blob/main/icons/bin/icons/Autothrottle_Dark200p.png?raw=true -o /usr/share/icons/hicolor/48x48/apps/powercontrol.png 2>/dev/null
 fi
 
 NEW_CONFIG_PATH="$CONFIG_DIR/config"

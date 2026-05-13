@@ -6,7 +6,7 @@ Open Terminal, copy paste, and run:
 
 ### Supports all Intel, AMD, and ARM64 (including Apple) SoCs.
 
-__How It Works:__
+<br>
 
 *PowerControl:*
 

@@ -64,7 +64,8 @@ case "$choice" in
         rm -rf /home/chronos/user/MyFiles/Downloads/PowerControl_Config 2>/dev/null
         remove_file_with_message "$INSTALL_DIR/powercontrol"
         remove_file_with_message "$INSTALL_DIR/Uninstall_PowerControl.sh"
-
+        sudo rm -rf /usr/share/applications/powercontrol-gui.desktop 2>/dev/null
+        sudo rm -rf /usr/share/icons/hicolor/48x48/apps/powercontrol.png 2>/dev/null
         if [ -d "$INSTALL_DIR" ] && [ -z "$(ls -A "$INSTALL_DIR")" ]; then
             sudo rm -rf "$INSTALL_DIR" && echo "Removed: $INSTALL_DIR"
         else

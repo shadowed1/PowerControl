@@ -156,7 +156,7 @@ echo "$BRIGHTNESS_PATH"
 echo "$MAX_BRIGHTNESS_PATH${RESET}"
 echo ""
 
-echo "${RESET}${CYAN}Detected CPU Vendor: $CPU_VENDOR"
+echo "${RESET}${CYAN}Detected CPU: $CPU_VENDOR"
 echo "PERF_PATH: $PERF_PATH"
 echo "PERF_PATHS: ${PERF_PATHS[*]}"
 echo "TURBO_PATH: $TURBO_PATH"

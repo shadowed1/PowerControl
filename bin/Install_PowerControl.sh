@@ -269,7 +269,7 @@ enable_component_on_boot() {
         sudo cp "$config_file" "$target_file"
         echo "$var_name=1" | sudo tee -a "$CONFIG_FILE" > /dev/null
         sudo systemctl daemon-reload
-        sudo systemctl enable --now $config_file
+        sudo systemctl enable --now $CONFIG_FILE
         echo ""
     else
         echo "$component must be started manually on boot."

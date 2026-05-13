@@ -153,7 +153,7 @@ sudo bash "$INSTALL_DIR/powercontrol" stop 2>/dev/null
 echo "$INSTALL_DIR" | sudo tee "$INSTALL_DIR/.install_path" >/dev/null
 
 declare -a files=(
-  "powercontrol"
+  "powercontrol" "gpucontrol"
   "Uninstall_PowerControl.sh"
   "Reinstall_PowerControl.sh"
   "version" "no_turbo.service" 

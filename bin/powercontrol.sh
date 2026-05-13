@@ -8,11 +8,7 @@ CYAN=$(tput setaf 6)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 INSTALL_DIR="@INSTALL_DIR@"
-if [ -d "/home/chronos/user/MyFiles/Downloads" ]; then
-    CONFIG_FILE="/home/chronos/user/MyFiles/Downloads/ChromeOS_PowerControl_Config/config"
-else
-    CONFIG_FILE="/usr/local/bin/ChromeOS_PowerControl_Config/config"
-fi
+CONFIG_FILE="$INSTALL_DIR/config"
 LOG_FILE="/var/log/powercontrol.log"
 RUN_FLAG="$INSTALL_DIR/.powercontrol_enabled"
 PID_FILE="$INSTALL_DIR/.powercontrol_pid"
@@ -29,7 +25,6 @@ CONF_SOURCE="$INSTALL_DIR/powercontrol.conf"
 CONF_TARGET="/etc/init/powercontrol.conf"
 
 wait_for_config() {
-    local config_dir="/home/chronos/user/MyFiles/Downloads/ChromeOS_PowerControl_Config"
     local max_wait=300
     local elapsed=0
     
@@ -622,9 +617,9 @@ uninstall_script() {
 }
 
 reinstall_script() {
-    curl -L https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/ChromeOS_PowerControl_Installer.sh -o /home/chronos/user/ChromeOS_PowerControl_Installer.sh
+    curl -L https://raw.githubusercontent.com/shadowed1/ChromeOS_PowerControl/main/bin/Install_PowerControl.sh -o ~/Install_PowerControl.sh
     sudo mkdir -p /usr/local/bin
-    sudo bash /home/chronos/user/ChromeOS_PowerControl_Installer.sh
+    sudo -E bash ~/Install_PowerControl.sh
     exit 0
 }
 

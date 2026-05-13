@@ -8,8 +8,6 @@ __How It Works:__
 
 <br>
 
-*PowerControl:*
-
 - Uses ARM, AMD, and Intel's max_perf_pct for easy user control.
 - Pairs user adjustable max_perf_pct and thermal0 temp sensors to create a user adjustable clockspeed-temperature curve. 
 - If $min_temp threshold is below a certain point, the CPU will be able to reach max_perf_pct of its speed.

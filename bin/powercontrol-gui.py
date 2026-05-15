@@ -558,12 +558,12 @@ class ConfigEditor(Gtk.Window):
     def __init__(self):
         settings = Gtk.Settings.get_default()
         settings.set_property("gtk-application-prefer-dark-theme", True)
-        super().__init__(title="ChromeOS_PowerControl GUI")
+        super().__init__(title="PowerControl GUI")
         self.set_default_size(820, 680)
 
         headerbar = Gtk.HeaderBar()
         headerbar.set_show_close_button(True)
-        headerbar.props.title = "ChromeOS_PowerControl GUI"
+        headerbar.props.title = "PowerControl GUI"
         headerbar.set_decoration_layout("menu:minimize,maximize,close")
         self.set_titlebar(headerbar)
 
@@ -590,7 +590,7 @@ class ConfigEditor(Gtk.Window):
                 "Could not find config file at:\n"
                 "/mnt/chromeos/MyFiles/Downloads/ChromeOS_PowerControl_Config/config\n"
                 "/mnt/shared/MyFiles/Downloads/ChromeOS_PowerControl_Config/config\n"
-                "/usr/local/bin/ChromeOS_PowerControl_Config/config\n"
+                "/usr/local/bin/PowerControl_Config/config\n"
                 "/home/chronos/user/MyFiles/Downloads/ChromeOS_PowerControl_Config/config\n\n"
                 "Please ensure the folder is shared to Crostini/Chard."
             )
@@ -607,7 +607,7 @@ class ConfigEditor(Gtk.Window):
     def find_config_file(self):
         possible_paths = [
             "/mnt/chromeos/MyFiles/Downloads/ChromeOS_PowerControl_Config/config",
-            "/usr/local/bin/ChromeOS_PowerControl_Config/config",
+            "/usr/local/bin/PowerControl_Config/config",
             os.path.expanduser(
                 "/home/chronos/user/MyFiles/Downloads/ChromeOS_PowerControl_Config/config"),
             "/mnt/shared/MyFiles/Downloads/ChromeOS_PowerControl_Config/config",

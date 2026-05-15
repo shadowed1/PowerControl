@@ -64,11 +64,12 @@ __PowerControl commands with examples:__
   `gpucontrol monitor             # Monitor GPU clockspeed in real-time.`        
   `sudo gpucontrol restore        # Restore GPU max frequency to original value`                                         
   `sudo gpucontrol 800            # Set GPU max frequency to 800 MHz`            
-  `sudo gpucontrol startup        # Enable or disable GPUControl on startup`        
+  `sudo gpucontrol startup        # Enable or disable GPUControl on startup`
   <br><br>
 
   
 *Changelog:*
 
 - 0.1:  `Released PowerControl for Linux.`<br> <br>
+- 0.2:  `Added Graph for PowerControl. Fixed AMD CPU temp sensor on Linux. Thanks to Tavreth for helping.` <br><br>
   

@@ -17,6 +17,7 @@ Open Terminal, copy paste, and run:
 - PowerControl will always be stringent regarding thermals and performance versus native behavior.
 - Editable clockspeed ramp-up and ramp-down feature; emulating modern AMD thermal behavior for Intel + ARM.
 - Alter the clockspeed-temperature curve to be more aggressive/passive using hotzone variable.
+- Uses a virtual temp sensor for Apple Silicon
 <br>
 
 *GPUControl:* <br>

@@ -314,7 +314,7 @@ get_temp() {
 
         fake_temp=$(awk "BEGIN {
             p = $power_uw / 1000000
-            printf \"%d\", 32 + (p * 2)
+            printf \"%d\", 32 + (p * 3)
         }")
         echo "$fake_temp"
         return 0

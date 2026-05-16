@@ -59,7 +59,7 @@ detect_cpu_type() {
     IS_INTEL=0
     IS_AMD=0
     IS_ARM=0
-
+    IS_ASAHI=0
     PERF_PATH=""
     PERF_PATHS=()
     TURBO_PATH=""

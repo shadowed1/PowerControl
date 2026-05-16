@@ -25,6 +25,7 @@ TURBO_PATH=""
 IS_AMD=0
 IS_INTEL=0
 IS_ARM=0
+IS_ASAHI=0
 timestamp=$(printf '%(%Y-%m-%d %H:%M:%S)T\n' -1)
 CONF_SOURCE="$INSTALL_DIR/powercontrol.service"
 CONF_TARGET="/etc/systemd/system/powercontrol.service"
@@ -127,6 +128,23 @@ detect_cpu_type() {
                 find /sys/devices/system/cpu/cpufreq/ \
                     -type f -name 'scaling_max_freq' 2>/dev/null
             )
+
+            if uname -a | grep -q '^Linux asahi'; then
+                IS_ASAHI=1
+            
+                for hwmon in /sys/class/hwmon/hwmon*; do
+                    if [ -r "$hwmon/power3_label" ] &&
+                       [ -r "$hwmon/power3_input" ]
+                    then
+                        read -r label < "$hwmon/power3_label"
+            
+                        if [ "$label" = "Heatpipe Power" ]; then
+                            ASAHI_HEATPIPE_PATH="$hwmon/power3_input"
+                            break
+                        fi
+                    fi
+                done
+            fi
 
             for zone in /sys/class/thermal/thermal_zone*/temp; do
                 if [ -r "$zone" ]; then
@@ -273,6 +291,34 @@ load_config
 get_temp() {
     local temp_millic
 
+    # Asahi Linux synthetic CPU temperature
+    if (( IS_ASAHI )) && [ -r "$ASAHI_HEATPIPE_PATH" ]; then
+        local power_uw
+        local power_w
+        local cpu_idle
+        local cpu_util
+        local fake_temp
+
+        if read -r power_uw < "$ASAHI_HEATPIPE_PATH"; then
+            power_w=$(awk "BEGIN {
+                printf \"%.2f\", $power_uw / 1000000
+            }")
+
+            cpu_idle=$(top -bn1 | awk '/Cpu/ {print $8}')
+            cpu_util=$(awk "BEGIN {
+                printf \"%.0f\", 100 - $cpu_idle
+            }")
+
+            fake_temp=$(awk "BEGIN {
+                print int(32 + ($power_w * 5.2) + ($cpu_util * 0.08))
+            }")
+
+            echo "$fake_temp"
+            return 0
+        fi
+    fi
+
+    # Standard thermal sensor path
     if [ -z "$TEMP_PATH" ] || [ ! -r "$TEMP_PATH" ]; then
         echo "0"
         return 1

@@ -281,17 +281,43 @@ get_temp() {
 
     if (( IS_ASAHI )); then
         local power_uw fake_temp
-        if read -r power_uw < "$ASAHI_HEATPIPE_PATH"; then
-            fake_temp=$(awk "BEGIN {
-                p = $power_uw / 1000000
-                printf \"%d\", 42 + (p * 3)
-            }")
-            echo "$fake_temp"
-            return 0
+
+        if ! read -r power_uw < "$ASAHI_HEATPIPE_PATH" 2>/dev/null; then
+            local new_path=""
+            for d in /sys/class/hwmon/hwmon*; do
+                for label in "$d"/power*_label; do
+                    [ -e "$label" ] || continue
+                    read -r lname < "$label"
+                    if [ "$lname" = "Heatpipe Power" ]; then
+                        new_path="${label%_label}_input"
+                        break 2
+                    fi
+                done
+            done
+
+            if [ -z "$new_path" ] || [ ! -r "$new_path" ]; then
+                printf "${RED}heatpipe re-detect failed\n ${RESET}" >> "$LOG_FILE"
+                echo "0"
+                return 1
+            fi
+
+            printf "${CYAN}Heatpipe path stale, updating: %s -> %s\n" \
+                "$ASAHI_HEATPIPE_PATH" "$new_path ${RESET}" >> "$LOG_FILE"
+
+            ASAHI_HEATPIPE_PATH="$new_path"
+
+            sed -i "s|^ASAHI_HEATPIPE_PATH=.*|ASAHI_HEATPIPE_PATH=$new_path|" \
+                "$CONFIG_FILE"
+
+            read -r power_uw < "$ASAHI_HEATPIPE_PATH"
         fi
 
-        echo "0"
-        return 1
+        fake_temp=$(awk "BEGIN {
+            p = $power_uw / 1000000
+            printf \"%d\", 42 + (p * 3)
+        }")
+        echo "$fake_temp"
+        return 0
     fi
 
     if [ -z "$TEMP_PATH" ] || [ ! -r "$TEMP_PATH" ]; then
@@ -840,7 +866,7 @@ case "$1" in
         else
             nohup "$0" __powercontrol_monitor__ >> "$LOG_FILE" 2>&1 &
             echo $! > "$PID_FILE"
-            echo "${CYAN}$(printf '%(%Y-%m-%d %H:%M:%S)T\n' -1) - Starting PowerControl - Output is logged to $LOG_FILE${RESET}"
+            echo "${CYAN}$(printf '%(%Y-%m-%d %H:%M:%S)T\n' -1) - Starting PowerControl - Output is logged to $LOG_FILE${RESET}" | tee -a "$LOG_FILE"
         fi
     ;;
 

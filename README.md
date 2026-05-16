@@ -75,4 +75,5 @@ __PowerControl commands with examples:__
 
 - 0.1:  `Released PowerControl for Linux.`<br> <br>
 - 0.2:  `Added Graph for PowerControl. Fixed AMD CPU temp sensor on Linux. Thanks to Tavreth for helping.` <br><br>
+- 0.3:  `Added Apple Silicon support for Asahi Linux` <br><br>
   

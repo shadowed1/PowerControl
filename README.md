@@ -19,7 +19,9 @@ Open Terminal, copy paste, and run:
 - Alter the clockspeed-temperature curve to be more aggressive/passive using hotzone variable.
 <br>
 
-*GPUControl:*
+*GPUControl:* <br>
+
+__For Mediatek and Intel only__ <br>
 
 - Identifies the GPU (AMD, Adreno, Mali, and Intel) based on the name of the device's path in /sys/class/
 - Limits control to only below the maximum clock speed for safety and with Chromebooks in mind.

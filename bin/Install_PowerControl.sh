@@ -15,10 +15,12 @@ detect_cpu_type() {
     IS_INTEL=0
     IS_AMD=0
     IS_ARM=0
+    IS_ASAHI=0
     PERF_PATH=""
     PERF_PATHS=()
     TURBO_PATH=""
-
+    ASAHI_HEATPIPE_PATH=""
+    
     case "$CPU_VENDOR" in
         GenuineIntel)
             IS_INTEL=1
@@ -38,6 +40,22 @@ detect_cpu_type() {
         *)
             IS_ARM=1
             mapfile -t PERF_PATHS < <(find /sys/devices/system/cpu/cpufreq/ -type f -name 'scaling_max_freq' 2>/dev/null)
+            if uname -a | grep -q '^Linux asahi'; then
+                IS_ASAHI=1
+            
+                for hwmon in /sys/class/hwmon/hwmon*; do
+                    if [ -r "$hwmon/power3_label" ] &&
+                       [ -r "$hwmon/power3_input" ]
+                    then
+                        read -r label < "$hwmon/power3_label"
+            
+                        if [ "$label" = "Heatpipe Power" ]; then
+                            ASAHI_HEATPIPE_PATH="$hwmon/power3_input"
+                            break
+                        fi
+                    fi
+                done
+            fi
             ;;
     esac
 }
@@ -271,13 +289,15 @@ declare -a ordered_keys=(
   "IS_AMD"
   "IS_INTEL"
   "IS_ARM"
+  "IS_ASAHI"
+  "ASAHI_HEATPIPE_PATH"
 )
 
 declare -a ordered_categories=("PowerControl" "GPUControl" "Platform Configuration")
 declare -A categories=(
   ["PowerControl"]="MAX_TEMP MIN_TEMP MAX_PERF_PCT MIN_PERF_PCT HOTZONE CPU_POLL RAMP_UP RAMP_DOWN"
   ["GPUControl"]="GPU_MAX_FREQ"
-  ["Platform Configuration"]="IS_AMD IS_INTEL IS_ARM PERF_PATH PERF_PATHS TURBO_PATH GPU_TYPE GPU_FREQ_PATH ORIGINAL_GPU_MAX_FREQ PP_OD_FILE AMD_SELECTED_SCLK_INDEX")
+  ["Platform Configuration"]="IS_AMD IS_INTEL IS_ARM IS_ASAHI ASAHI_HEATPIPE_PATH PERF_PATH PERF_PATHS TURBO_PATH GPU_TYPE GPU_FREQ_PATH ORIGINAL_GPU_MAX_FREQ PP_OD_FILE AMD_SELECTED_SCLK_INDEX")
   
 if [[ -z "${ORIGINAL_GPU_MAX_FREQ}" ]]; then ORIGINAL_GPU_MAX_FREQ=$GPU_MAX_FREQ; fi
 if [[ -z "${MAX_TEMP}" ]]; then MAX_TEMP=90; fi
@@ -309,6 +329,8 @@ declare -A defaults=(
   [IS_AMD]=$IS_AMD
   [IS_INTEL]=$IS_INTEL
   [IS_ARM]=$IS_ARM
+  [IS_ASAHI]=$IS_ASAHI
+  [ASAHI_HEATPIPE_PATH]=$ASAHI_HEATPIPE_PATH
 )
 
 if [ -f "$CONFIG_FILE" ]; then

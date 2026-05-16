@@ -4,8 +4,6 @@ After=multi-user.target
 [Service]
 Type=simple
 ExecStart=/usr/local/bin/gpucontrol __gpucontrol_monitor__
-Restart=always
-RestartSec=20
 StandardOutput=append:/var/log/gpucontrol.log
 StandardError=append:/var/log/gpucontrol.log
 [Install]

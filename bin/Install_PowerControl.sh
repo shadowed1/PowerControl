@@ -120,20 +120,27 @@ detect_gpu_freq() {
     done
 
     # AMD
-    elif [ -f /sys/class/drm/card*/device/pp_od_clk_voltage ]; then
-        GPU_TYPE="amd"
-        for f in /sys/class/drm/card*/device/pp_od_clk_voltage; do
-            if [ -f "$f" ]; then
-                mapfile -t SCLK_LINES < <(sudo grep -i '^sclk' "$f" 2>/dev/null)
-                if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
-                GPU_MAX_FREQ=$(printf '%s\n' "${SCLK_LINES[@]}" \
-                    | sed -n 's/.*\([0-9]\{1,\}\)[Mm][Hh][Zz].*/\1/p' \
-                    | sort -nr | head -n1)
-                fi
-                GPU_FREQ_PATH="$f"
-                GPU_MAX_FREQ=${GPU_MAX_FREQ:-0}
-                done
+    elif compgen -G "/sys/class/drm/card*/device/pp_od_clk_voltage" > /dev/null; then
+    GPU_TYPE="amd"
 
+    for f in /sys/class/drm/card*/device/pp_od_clk_voltage; do
+        [ -f "$f" ] || continue
+
+        mapfile -t SCLK_LINES < <(grep -i '^sclk' "$f" 2>/dev/null)
+
+        if [[ ${#SCLK_LINES[@]} -gt 0 ]]; then
+            GPU_MAX_FREQ=$(
+                printf '%s\n' "${SCLK_LINES[@]}" |
+                sed -n 's/.*\([0-9]\+\)[Mm][Hh][Zz].*/\1/p' |
+                sort -nr |
+                head -n1
+            )
+
+            GPU_FREQ_PATH="$f"
+            GPU_MAX_FREQ=${GPU_MAX_FREQ:-0}
+            break
+        fi
+    done
     # AMD GCN
     elif [ -f /sys/class/drm/card0/device/pp_dpm_sclk ]; then
         GPU_TYPE="amd"
